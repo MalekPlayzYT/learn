@@ -6,7 +6,6 @@ const firebaseConfig = {
   storageBucket: "malek-8737c.firebasestorage.app",
   messagingSenderId: "1060789362555",
   appId: "1:1060789362555:web:e3c057693928f04926e7de",
-  measurementId: "G-HC4Z8JPYTX"
 };
 
 // Initialize Firebase
