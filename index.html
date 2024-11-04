@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Portal</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <h1>School Portal</h1>
+        <div class="login-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <p id="error" class="error-message"></p>
+        </div>
+        <div id="studentDashboard" class="dashboard hidden">
+            <h2>Student Dashboard</h2>
+            <div id="gradesContainer"></div>
+            <button onclick="logout()">Logout</button>
+        </div>
+        <div id="teacherDashboard" class="dashboard hidden">
+            <h2>Teacher Dashboard</h2>
+            <div class="teacher-input">
+                <input type="text" id="studentName" placeholder="Student Name">
+                <input type="number" id="exam" placeholder="Exam (100 Marks)">
+                <input type="number" id="homework" placeholder="Homework (20 Marks)">
+                <input type="number" id="classwork" placeholder="Class Work (20 Marks)">
+                <input type="number" id="quiz" placeholder="Quiz (30 Marks)">
+                <button onclick="addGrades()">Add Grades</button>
+            </div>
+            <div id="allStudentsGrades"></div>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
