@@ -22,6 +22,11 @@ const accounts = {
     }
 };
 
+// Load saved grades from localStorage on page load
+window.addEventListener('load', () => {
+    loadGrades();
+});
+
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -82,6 +87,7 @@ function addGrades() {
     
     if (accounts[studentName]) {
         accounts[studentName].grades = { exam, homework, classwork, quiz };
+        saveGrades();
         alert('Grades added successfully!');
         document.getElementById('studentName').value = '';
         document.getElementById('exam').value = '';
@@ -90,5 +96,28 @@ function addGrades() {
         document.getElementById('quiz').value = '';
     } else {
         alert('Student not found!');
+    }
+}
+
+// Save grades to localStorage
+function saveGrades() {
+    const gradesData = {};
+    for (let student in accounts) {
+        if (accounts[student].grades) {
+            gradesData[student] = accounts[student].grades;
+        }
+    }
+    localStorage.setItem('gradesData', JSON.stringify(gradesData));
+}
+
+// Load grades from localStorage
+function loadGrades() {
+    const savedGradesData = JSON.parse(localStorage.getItem('gradesData'));
+    if (savedGradesData) {
+        for (let student in savedGradesData) {
+            if (accounts[student]) {
+                accounts[student].grades = savedGradesData[student];
+            }
+        }
     }
 }
