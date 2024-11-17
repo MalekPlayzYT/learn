@@ -1,130 +1,99 @@
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyByIXTPv9eNRLM6SSj8YURla9tKTT5Txas",
-  authDomain: "malek-8737c.firebaseapp.com",
-  projectId: "malek-8737c",
-  storageBucket: "malek-8737c.firebasestorage.app",
-  messagingSenderId: "1060789362555",
-  appId: "1:1060789362555:web:e3c057693928f04926e7de",
+// Load My Subjects on page load
+window.addEventListener('load', () => {
+    loadSubjects();
+});
+
+// Event listeners for sidebar buttons
+document.getElementById('subjectsBtn').addEventListener('click', loadSubjects);
+document.getElementById('gradesBtn').addEventListener('click', loadGrades);
+document.getElementById('examsBtn').addEventListener('click', loadExams);
+
+// URLs for different weeks' content
+const weekContentLinks = {
+    1: {
+        homework: 'https://forms.gle/sKwgHd5PQxaLUV4K9',
+        classwork: 'https://forms.gle/EmkqUuBgYt7UdkkL7',
+        quiz: 'https://forms.gle/6qV1jcYKV7QJaEYCA',
+        video: 'https://video-url-week1.com'
+    },
+    2: {
+        homework: 'https://form-url-week2-homework.com',
+        classwork: 'https://form-url-week2-classwork.com',
+        quiz: 'https://form-url-week2-quiz.com',
+        video: 'https://video-url-week2.com'
+    },
+    3: {
+        homework: 'https://form-url-week3-homework.com',
+        classwork: 'https://form-url-week3-classwork.com',
+        quiz: 'https://form-url-week3-quiz.com',
+        video: 'https://video-url-week3.com'
+    },
+    4: {
+        homework: 'https://form-url-week4-homework.com',
+        classwork: 'https://form-url-week4-classwork.com',
+        quiz: 'https://form-url-week4-quiz.com',
+        video: 'https://video-url-week4.com'
+    },
 };
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// Load the My Subjects section
+function loadSubjects() {
+    const content = document.getElementById('content');
+    content.innerHTML = '<h2>My Subjects</h2>';
 
-// Accounts and Authentication
-const accounts = {
-    teacher: {
-        password: 'malek',
-    }
-};
+    for (let week = 1; week <= 5; week++) {
+        // Create a section for each week
+        const weekSection = document.createElement('div');
+        weekSection.className = 'week-section';
+        weekSection.innerHTML = `<h3>Week ${week}</h3>`;
 
-// Function to log in
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('error');
-
-    if (username === 'teacher' && password === accounts.teacher.password) {
-        showTeacherDashboard();
-    } else {
-        // Check if it's a student account
-        db.collection('students').doc(username).get().then((doc) => {
-            if (doc.exists && doc.data().password === password) {
-                showStudentDashboard(username);
-            } else {
-                errorMessage.textContent = 'Invalid username or password.';
-            }
-        }).catch((error) => {
-            console.error("Error fetching document: ", error);
-            errorMessage.textContent = 'Error during login. Please try again.';
+        // Toggle visibility of content
+        weekSection.addEventListener('click', () => {
+            const weekContent = weekSection.querySelector('.week-content');
+            weekContent.style.display = weekContent.style.display === 'none' ? 'block' : 'none';
         });
+
+        // Create buttons for each type of content
+        const weekContent = document.createElement('div');
+        weekContent.className = 'week-content';
+        weekContent.style.display = 'none';
+        weekContent.innerHTML = `
+            <button onclick="window.open('${weekContentLinks[week].homework}')">Homework</button>
+            <button onclick="window.open('${weekContentLinks[week].classwork}')">Classwork</button>
+            <button onclick="window.open('${weekContentLinks[week].quiz}')">Quiz</button>
+            <button onclick="window.open('${weekContentLinks[week].video}')">Video</button>
+        `;
+
+        weekSection.appendChild(weekContent);
+        content.appendChild(weekSection);
     }
 }
 
-// Function to show student dashboard
-function showStudentDashboard(username) {
-    document.querySelector('.login-form').classList.add('hidden');
-    document.getElementById('studentDashboard').classList.remove('hidden');
-
-    db.collection('students').doc(username).get().then((doc) => {
-        if (doc.exists) {
-            const grades = doc.data().grades || { exam: null, homework: null, classwork: null, quiz: null };
-            const gradesContainer = document.getElementById('gradesContainer');
-
-            if (grades.exam === null) {
-                gradesContainer.innerHTML = `<p>Grades are not available yet.</p>`;
-            } else {
-                const totalScore = (grades.exam || 0) + (grades.homework || 0) + (grades.classwork || 0) + (grades.quiz || 0);
-                gradesContainer.innerHTML = `
-                    <p>Exam: ${grades.exam} / 100</p>
-                    <p>Homework: ${grades.homework} / 20</p>
-                    <p>Class Work: ${grades.classwork} / 20</p>
-                    <p>Quiz: ${grades.quiz} / 30</p>
-                    <p>Total Score: ${totalScore} / 170</p>
-                `;
-            }
-        }
-    }).catch((error) => {
-        console.error("Error getting document:", error);
-    });
+// Load My Grades section
+function loadGrades() {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+        <h2>My Grades</h2>
+        <div class="grade-section">
+            <p>Exam: 0/65%</p>
+            <p>Quiz: 0/15%</p>
+            <p>Homework: 0/10%</p>
+            <p>Classwork: 0/10%</p>
+            <h3>Total Grade <b>0%<b> </h3>
+        </div>
+    `;
 }
 
-// Function to show teacher dashboard
-function showTeacherDashboard() {
-    document.querySelector('.login-form').classList.add('hidden');
-    document.getElementById('teacherDashboard').classList.remove('hidden');
-}
-
-// Function to logout
-function logout() {
-    document.querySelector('.login-form').classList.remove('hidden');
-    document.getElementById('studentDashboard').classList.add('hidden');
-    document.getElementById('teacherDashboard').classList.add('hidden');
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('error').textContent = '';
-}
-
-// Function to add grades
-function addGrades() {
-    const studentName = document.getElementById('studentName').value;
-    const exam = parseInt(document.getElementById('exam').value);
-    const homework = parseInt(document.getElementById('homework').value);
-    const classwork = parseInt(document.getElementById('classwork').value);
-    const quiz = parseInt(document.getElementById('quiz').value);
-
-    if (studentName) {
-        db.collection('students').doc(studentName).set({
-            grades: {
-                exam,
-                homework,
-                classwork,
-                quiz
-            }
-        }, { merge: true })
-        .then(() => {
-            alert('Grades added successfully!');
-            document.getElementById('studentName').value = '';
-            document.getElementById('exam').value = '';
-            document.getElementById('homework').value = '';
-            document.getElementById('classwork').value = '';
-            document.getElementById('quiz').value = '';
-        })
-        .catch((error) => {
-            console.error("Error adding grades: ", error);
-        });
-    } else {
-        alert('Please enter a student name.');
-    }
-}
-
-// Optional: A function to check if a student exists
-function checkIfStudentExists(studentName) {
-    db.collection('students').doc(studentName).get().then((doc) => {
-        return doc.exists;
-    }).catch((error) => {
-        console.error("Error checking student: ", error);
-        return false;
-    });
+// Load Exams section
+function loadExams() {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+        <h2>Exams</h2>
+        <div class="exam-info">
+            <p><strong>Date:</strong> November 30, 2024</p>
+            <p><strong>Time:</strong> 30 Min</p>
+            <p><strong>Total Questions:</strong> 27</p>
+            <button class="start-exam" onclick="window.open('https://candidate.speedexam.net/openquiz.aspx?quiz=C271823D33BC4776B369607B4E790714')">Start Exam</button>
+        </div>
+    `;
 }
