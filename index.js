@@ -76,10 +76,10 @@ function loadGrades() {
         <h2>My Grades</h2>
         <div class="grade-section">
             <p>Exam: 0/65%</p>
-            <p>Quiz: 0/15%</p>
-            <p>Homework: 0/10%</p>
-            <p>Classwork: 0/10%</p>
-            <h3>Total Grade <b>0%<b> </h3>
+            <p>Quiz: 3/15%</p>
+            <p>Homework: 2.5/10%</p>
+            <p>Classwork: 2/10%</p>
+            <h3>Total Grade <b>7.5%<b> </h3>
         </div>
     `;
 }
