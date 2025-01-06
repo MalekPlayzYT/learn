@@ -4,8 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malek Schools</title>
-    <link rel="stylesheet" href="index.css">
     <link rel="icon" type="image/png" href="Malek_logo__1_-removebg-preview.png">
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.sidebar {
+    width: 280px;
+    background-color: #1e272e;
+    color: white;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar h2 {
+    font-size: 1.8em;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.sidebar button {
+    padding: 15px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: left;
+}
+
+.sidebar button:hover {
+    background-color: #2980b9;
+}
+
+.content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    margin: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content h2 {
+    font-size: 1.6em;
+    margin-bottom: 20px;
+    color: #3498db;
+    font-weight: 600;
+}
+
+.week-section {
+    margin-bottom: 15px;
+    background-color: #ecf0f1;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.week-section h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.week-content {
+    display: none;
+    padding: 10px;
+}
+
+.week-content button {
+    padding: 12px 18px;
+    margin-right: 10px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.week-content button:hover {
+    background-color: #2980b9;
+}
+
+.exam-info {
+    padding: 15px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.start-exam {
+    padding: 12px 24px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.start-exam:hover {
+    background-color: #c0392b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 15px;
+    }
+
+    .sidebar button {
+        flex: 1;
+        padding: 10px;
+        margin: 5px;
+        font-size: 0.9em;
+    }
+
+    .content {
+        margin: 10px;
+        padding: 20px;
+    }
+}
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -17,7 +161,107 @@
     <div class="content" id="content">
         <!-- Content will load here automatically -->
     </div>
-    <script src="index.js"></script>
+    <script>
+        // Load My Subjects on page load
+window.addEventListener('load', () => {
+    loadSubjects();
+});
+
+// Event listeners for sidebar buttons
+document.getElementById('subjectsBtn').addEventListener('click', loadSubjects);
+document.getElementById('gradesBtn').addEventListener('click', loadGrades);
+document.getElementById('examsBtn').addEventListener('click', loadExams);
+
+// URLs for different weeks' content
+const weekContentLinks = {
+    1: {
+        homework: 'https://forms.gle/sKwgHd5PQxaLUV4K9',
+        classwork: 'https://forms.gle/EmkqUuBgYt7UdkkL7',
+        quiz: 'https://forms.gle/6qV1jcYKV7QJaEYCA',
+        video: 'https://video-url-week1.com'
+    },
+    2: {
+        homework: 'https://form-url-week2-homework.com',
+        classwork: 'https://form-url-week2-classwork.com',
+        quiz: 'https://form-url-week2-quiz.com',
+        video: 'https://video-url-week2.com'
+    },
+    3: {
+        homework: 'https://form-url-week3-homework.com',
+        classwork: 'https://form-url-week3-classwork.com',
+        quiz: 'https://form-url-week3-quiz.com',
+        video: 'https://video-url-week3.com'
+    },
+    4: {
+        homework: 'https://form-url-week4-homework.com',
+        classwork: 'https://form-url-week4-classwork.com',
+        quiz: 'https://form-url-week4-quiz.com',
+        video: 'https://video-url-week4.com'
+    },
+};
+
+// Load the My Subjects section
+function loadSubjects() {
+    const content = document.getElementById('content');
+    content.innerHTML = '<h2>My Subjects</h2>';
+
+    for (let week = 1; week <= 5; week++) {
+        // Create a section for each week
+        const weekSection = document.createElement('div');
+        weekSection.className = 'week-section';
+        weekSection.innerHTML = `<h3>Week ${week}</h3>`;
+
+        // Toggle visibility of content
+        weekSection.addEventListener('click', () => {
+            const weekContent = weekSection.querySelector('.week-content');
+            weekContent.style.display = weekContent.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Create buttons for each type of content
+        const weekContent = document.createElement('div');
+        weekContent.className = 'week-content';
+        weekContent.style.display = 'none';
+        weekContent.innerHTML = `
+            <button onclick="window.open('${weekContentLinks[week].homework}')">Homework</button>
+            <button onclick="window.open('${weekContentLinks[week].classwork}')">Classwork</button>
+            <button onclick="window.open('${weekContentLinks[week].quiz}')">Quiz</button>
+            <button onclick="window.open('${weekContentLinks[week].video}')">Video</button>
+        `;
+
+        weekSection.appendChild(weekContent);
+        content.appendChild(weekSection);
+    }
+}
+
+// Load My Grades section
+function loadGrades() {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+        <h2>My Grades</h2>
+        <div class="grade-section">
+            <p>Exam: 0/65%</p>
+            <p>Quiz: 3/15%</p>
+            <p>Homework: 2.5/10%</p>
+            <p>Classwork: 2/10%</p>
+            <h3>Total Grade <b>7.5%<b></h3>
+        </div>
+    `;
+}
+
+// Load Exams section
+function loadExams() {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+        <h2>Exams</h2>
+        <div class="exam-info">
+            <p><strong>Date:</strong> November 30, 2024</p>
+            <p><strong>Time:</strong> 30 Min</p>
+            <p><strong>Total Questions:</strong> 27</p>
+            <button class="start-exam" onclick="window.open('https://candidate.speedexam.net/openquiz.aspx?quiz=C271823D33BC4776B369607B4E790714')">Start Exam</button>
+        </div>
+    `;
+}
+    </script>
 </body>
 </html>
 
